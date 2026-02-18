@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Typography · Checkpoint v1</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap');
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  :root{
+    --ink:#000;--paper:#fff;--mid:#f0f0f0;--rule:#ccc;--dim:#888;--faint:#f4f4f4;
+    --c4-bg:#1a4d1a;--c4-fg:#fff;--c4-mid:#d4e8d4;
+    --c3-bg:#2e5f8a;--c3-fg:#fff;--c3-mid:#d4e4f4;
+    --c2-bg:#8a6800;--c2-fg:#fff;--c2-mid:#f5e8b0;
+    --c1-bg:#8a3800;--c1-fg:#fff;--c1-mid:#f5d8c0;
+    --c0-bg:#2a2a2a;--c0-fg:#fff;--c0-mid:#e0e0e0;
+  }
+  body{background:var(--paper);color:var(--ink);font-family:'DM Sans',sans-serif;font-weight:300;min-height:100vh;}
+
+  /* MASTHEAD */
+  .masthead{background:var(--ink);color:var(--paper);padding:2rem 2.5rem 1.75rem;display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:end;border-bottom:4px solid var(--ink);}
+  .masthead-label{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.28em;text-transform:uppercase;color:#aaa;margin-bottom:.4rem;}
+  .masthead h1{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:900;line-height:1;letter-spacing:-.02em;}
+  .masthead h1 em{font-style:italic;color:#aaa;}
+  .grade-display{text-align:right;}
+  .grade-label-sm{font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:#aaa;display:block;margin-bottom:.3rem;}
+  .grade-pill{display:inline-block;padding:.3rem .9rem;font-family:'DM Mono',monospace;font-size:.75rem;font-weight:500;letter-spacing:.05em;border:1px solid #555;color:#aaa;background:transparent;transition:all .2s;}
+  .grade-pill.g4{background:var(--c4-bg);border-color:var(--c4-bg);color:var(--c4-fg);}
+  .grade-pill.g3{background:var(--c3-bg);border-color:var(--c3-bg);color:var(--c3-fg);}
+  .grade-pill.g2{background:var(--c2-bg);border-color:var(--c2-bg);color:var(--c2-fg);}
+  .grade-pill.g1{background:var(--c1-bg);border-color:var(--c1-bg);color:var(--c1-fg);}
+  .grade-pill.g0{background:var(--c0-bg);border-color:var(--c0-bg);color:var(--c0-fg);}
+  .grade-pct{font-family:'DM Mono',monospace;font-size:.58rem;color:#aaa;display:block;margin-top:.3rem;text-align:right;}
+
+  /* META */
+  .meta-bar{background:var(--mid);border-bottom:1px solid var(--rule);padding:1rem 2.5rem;display:flex;gap:2rem;flex-wrap:wrap;}
+  .meta-field{display:flex;flex-direction:column;gap:.15rem;flex:1;min-width:110px;}
+  .meta-field label{font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);}
+  .meta-field input{background:transparent;border:none;border-bottom:1px solid var(--rule);font-family:'DM Sans',sans-serif;font-size:.88rem;color:var(--ink);padding:.15rem 0;outline:none;}
+  .meta-field input:focus{border-bottom-color:var(--ink);}
+
+  /* SCALE REFERENCE */
+  .scale-bar{display:flex;border-bottom:1px solid var(--rule);}
+  .scale-cell{flex:1;padding:.55rem .9rem;border-right:1px solid var(--rule);}
+  .scale-cell:last-child{border-right:none;}
+  .scale-cell .sc-num{font-family:'DM Mono',monospace;font-size:1rem;font-weight:500;display:block;margin-bottom:.1rem;}
+  .scale-cell .sc-name{font-family:'DM Mono',monospace;font-size:.58rem;font-weight:500;display:block;}
+  .scale-cell .sc-pct{font-family:'DM Mono',monospace;font-size:.5rem;opacity:.75;display:block;margin-top:.05rem;}
+  .scale-cell .sc-desc{font-size:.65rem;margin-top:.25rem;line-height:1.35;opacity:.85;}
+  .scale-cell.s4{background:var(--c4-mid);border-top:3px solid var(--c4-bg);} .scale-cell.s4 .sc-num,.scale-cell.s4 .sc-name{color:var(--c4-bg);}
+  .scale-cell.s3{background:var(--c3-mid);border-top:3px solid var(--c3-bg);} .scale-cell.s3 .sc-num,.scale-cell.s3 .sc-name{color:var(--c3-bg);}
+  .scale-cell.s2{background:var(--c2-mid);border-top:3px solid var(--c2-bg);} .scale-cell.s2 .sc-num,.scale-cell.s2 .sc-name{color:var(--c2-bg);}
+  .scale-cell.s1{background:var(--c1-mid);border-top:3px solid var(--c1-bg);} .scale-cell.s1 .sc-num,.scale-cell.s1 .sc-name{color:var(--c1-bg);}
+  .scale-cell.s0{background:var(--c0-mid);border-top:3px solid var(--c0-bg);} .scale-cell.s0 .sc-num,.scale-cell.s0 .sc-name{color:var(--c0-bg);}
+
+  /* CONTENT */
+  .content{max-width:860px;margin:0 auto;padding:1.75rem 2.5rem 5rem;}
+  .section{margin-bottom:2rem;border:1px solid var(--rule);background:white;}
+  .section-header{padding:.85rem 1.25rem;border-bottom:1px solid var(--rule);background:var(--mid);display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:center;}
+  .section-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;}
+  .section-subtitle{font-size:.75rem;color:var(--dim);margin-top:.1rem;line-height:1.4;}
+  .section-tally{text-align:right;}
+  .tally-pts{font-family:'DM Mono',monospace;font-size:1.1rem;font-weight:500;display:block;}
+  .tally-max{font-family:'DM Mono',monospace;font-size:.52rem;color:var(--dim);}
+  .tally-grade{display:inline-block;margin-top:.25rem;padding:.15rem .5rem;font-family:'DM Mono',monospace;font-size:.55rem;font-weight:500;transition:all .2s;}
+  .tally-grade.g4{background:var(--c4-bg);color:var(--c4-fg);}
+  .tally-grade.g3{background:var(--c3-bg);color:var(--c3-fg);}
+  .tally-grade.g2{background:var(--c2-bg);color:var(--c2-fg);}
+  .tally-grade.g1{background:var(--c1-bg);color:var(--c1-fg);}
+  .tally-grade.g0{background:var(--c0-bg);color:var(--c0-fg);}
+
+  .subsection-label{padding:.4rem 1.25rem;font-family:'DM Mono',monospace;font-size:.54rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);background:var(--faint);border-bottom:1px solid #e8e8e8;}
+
+  .criterion{padding:.8rem 1.25rem;border-bottom:1px solid #ebebeb;display:grid;grid-template-columns:1fr auto;gap:1.5rem;align-items:center;}
+  .criterion:last-of-type{border-bottom:none;}
+  .criterion-label{font-family:'DM Mono',monospace;font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:#bbb;margin-bottom:.2rem;}
+  .criterion-text{font-size:.82rem;line-height:1.45;color:#222;}
+
+  /* SCORE BUTTONS 0–4 */
+  .score-wrap{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;}
+  .score-buttons{display:flex;gap:2px;}
+  .score-btn{width:36px;height:36px;border:1px solid var(--rule);background:var(--faint);font-family:'DM Mono',monospace;font-size:.9rem;font-weight:500;cursor:pointer;transition:all .1s;color:var(--dim);display:flex;align-items:center;justify-content:center;}
+  .score-btn:hover{border-color:var(--ink);color:var(--ink);background:white;}
+  .score-btn.sel-0{background:var(--c0-mid);border-color:var(--c0-bg);color:var(--c0-bg);font-weight:700;}
+  .score-btn.sel-1{background:var(--c1-mid);border-color:var(--c1-bg);color:var(--c1-bg);font-weight:700;}
+  .score-btn.sel-2{background:var(--c2-mid);border-color:var(--c2-bg);color:var(--c2-bg);font-weight:700;}
+  .score-btn.sel-3{background:var(--c3-bg);border-color:var(--c3-bg);color:var(--c3-fg);font-weight:700;}
+  .score-btn.sel-4{background:var(--c4-bg);border-color:var(--c4-bg);color:var(--c4-fg);font-weight:700;}
+  .score-buttons.locked{opacity:.25;pointer-events:none;}
+
+  /* THRESHOLD */
+  .threshold-check{display:flex;align-items:center;gap:.3rem;font-family:'DM Mono',monospace;font-size:.54rem;color:#bbb;cursor:pointer;white-space:nowrap;}
+  .threshold-check input[type=checkbox]{width:12px;height:12px;cursor:pointer;accent-color:var(--ink);}
+  .threshold-check.met{color:var(--ink);font-weight:500;}
+  .gate-hint{font-family:'DM Mono',monospace;font-size:.48rem;color:#ccc;}
+  .quality-label{font-family:'DM Mono',monospace;font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;color:#ccc;text-align:right;}
+
+  /* NOTES */
+  .notes-row{padding:.6rem 1.25rem .8rem;border-top:1px dashed var(--rule);background:var(--faint);}
+  .notes-row label{font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.15em;text-transform:uppercase;color:#bbb;display:block;margin-bottom:.3rem;}
+  .notes-row textarea{width:100%;border:1px solid #ddd;background:white;font-family:'DM Sans',sans-serif;font-size:.8rem;color:var(--ink);padding:.4rem .6rem;resize:vertical;min-height:50px;outline:none;}
+  .notes-row textarea:focus{border-color:var(--rule);}
+
+  /* ACTION BAR */
+  .action-bar{position:fixed;bottom:0;left:0;right:0;background:var(--ink);color:var(--paper);padding:.85rem 2.5rem;display:flex;justify-content:space-between;align-items:center;border-top:3px solid #444;z-index:100;}
+  .bar-left{display:flex;align-items:center;gap:1rem;}
+  .bar-pts{font-family:'DM Mono',monospace;font-size:1rem;font-weight:500;}
+  .bar-pill{padding:.25rem .75rem;font-family:'DM Mono',monospace;font-size:.65rem;font-weight:500;transition:all .2s;border:1px solid #555;color:#aaa;}
+  .bar-pill.g4{background:var(--c4-bg);border-color:var(--c4-bg);color:var(--c4-fg);}
+  .bar-pill.g3{background:var(--c3-bg);border-color:var(--c3-bg);color:var(--c3-fg);}
+  .bar-pill.g2{background:var(--c2-bg);border-color:var(--c2-bg);color:var(--c2-fg);}
+  .bar-pill.g1{background:var(--c1-bg);border-color:var(--c1-bg);color:var(--c1-fg);}
+  .bar-pill.g0{background:var(--c0-bg);border-color:var(--c0-bg);color:var(--c0-fg);}
+  .bar-sub{font-family:'DM Mono',monospace;font-size:.58rem;color:#666;}
+  .btn-group{display:flex;gap:.6rem;}
+  .btn{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;padding:.5rem 1rem;border:1px solid rgba(255,255,255,.25);background:transparent;color:var(--paper);cursor:pointer;transition:all .15s;}
+  .btn:hover{background:rgba(255,255,255,.1);}
+  .btn.primary{background:white;border-color:white;color:var(--ink);}
+  .btn.primary:hover{background:#eee;}
+
+  @media print{
+    .action-bar{display:none!important;}
+    body{background:white;}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .content{padding:1rem 1.5rem;}
+    .section{break-inside:avoid;margin-bottom:1rem;}
+    .masthead,.meta-bar,.scale-bar{padding-left:1.5rem;padding-right:1.5rem;}
+  }
+  @media(max-width:600px){
+    .masthead,.meta-bar,.content,.action-bar{padding-left:1.25rem;padding-right:1.25rem;}
+    .criterion{grid-template-columns:1fr;}
+    .score-wrap{align-items:flex-start;}
+    .scale-bar{flex-wrap:wrap;}
+    .scale-cell{min-width:45%;border-bottom:1px solid var(--rule);}
+  }
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div>
+    <div class="masthead-label">Typography Course · Checkpoint — v1</div>
+    <h1>Design <em>Check</em></h1>
+  </div>
+  <div class="grade-display">
+    <span class="grade-label-sm">Overall</span>
+    <div class="grade-pill" id="grand-pill">not yet scored</div>
+    <div class="grade-pct" id="grand-pct"></div>
+  </div>
+</div>
+
+<div class="meta-bar">
+  <div class="meta-field"><label>Student Name</label><input type="text" placeholder="—"></div>
+  <div class="meta-field"><label>Reviewer</label><input type="text" placeholder="—"></div>
+  <div class="meta-field"><label>Assignment</label><input type="text" placeholder="—"></div>
+  <div class="meta-field"><label>Checkpoint</label><input type="text" placeholder="e.g. Week 4"></div>
+  <div class="meta-field"><label>Date</label><input type="date"></div>
+</div>
+
+<div class="scale-bar">
+  <div class="scale-cell s4"><span class="sc-num">4</span><span class="sc-name">Exceeds</span><span class="sc-pct">100% · A range</span><div class="sc-desc">Work D.J. shows future students</div></div>
+  <div class="scale-cell s3"><span class="sc-num">3</span><span class="sc-name">Meets</span><span class="sc-pct">85% · B range</span><div class="sc-desc">Good, solid — some revision needed</div></div>
+  <div class="scale-cell s2"><span class="sc-num">2</span><span class="sc-name">Needs Revision</span><span class="sc-pct">76% · C range</span><div class="sc-desc">Significant gaps remain</div></div>
+  <div class="scale-cell s1"><span class="sc-num">1</span><span class="sc-name">Insufficient Evidence</span><span class="sc-pct">60% · D range</span><div class="sc-desc">Missing docs or components to evaluate</div></div>
+  <div class="scale-cell s0"><span class="sc-num">0</span><span class="sc-name">Not Submitted</span><span class="sc-pct">0% · —</span><div class="sc-desc">Missing artifact / academic integrity issue</div></div>
+</div>
+
+<div class="content">
+
+<!-- IDEATION — weight: 20 pts -->
+<div class="section">
+  <div class="section-header">
+    <div>
+      <div class="section-title">Ideation</div>
+      <div class="section-subtitle">Did the designer explore many options to decide on and justify initial design directions?</div>
+    </div>
+    <div class="section-tally">
+      <span class="tally-pts" data-sec-pts="ideation">—</span>
+      <span class="tally-max">/ 20 pts</span>
+      <div><span class="tally-grade" data-sec-grade="ideation"></span></div>
+    </div>
+  </div>
+  <div class="criterion">
+    <div><div class="criterion-label">Design Brief</div><div class="criterion-text">Did you write a specific, descriptive design brief that clearly identifies audience, concept, and intent?</div></div>
+    <div class="score-wrap">
+      <div class="quality-label">Quality Score</div>
+      <div class="score-buttons" data-id="ideation-brief" data-section="ideation"></div>
+    </div>
+  </div>
+  <div class="criterion">
+    <div><div class="criterion-label">Benchmarks</div><div class="criterion-text">Did you collect at least 6 benchmarks and annotate each with what you are borrowing or avoiding—and why?</div></div>
+    <div class="score-wrap">
+      <label class="threshold-check" data-gate="ideation-benchmarks"><input type="checkbox" onchange="toggleGate('ideation-benchmarks',this)"> min. 6 met</label>
+      <div class="quality-label">Quality Score</div>
+      <div class="score-buttons locked" data-id="ideation-benchmarks" data-section="ideation"></div>
+      <div class="gate-hint">quantity unlocks quality</div>
+    </div>
+  </div>
+  <div class="criterion">
+    <div><div class="criterion-label">Typeface Studies</div><div class="criterion-text">Did you produce at least 5 typeface studies that explore different hierarchy/style sets?</div></div>
+    <div class="score-wrap">
+      <label class="threshold-check" data-gate="ideation-typeface"><input type="checkbox" onchange="toggleGate('ideation-typeface',this)"> min. 5 met</label>
+      <div class="quality-label">Quality Score</div>
+      <div class="score-buttons locked" data-id="ideation-typeface" data-section="ideation"></div>
+      <div class="gate-hint">quantity unlocks quality</div>
+    </div>
+  </div>
+  <div class="criterion">
+    <div><div class="criterion-label">Hierarchy Experiments</div><div class="criterion-text">Did you produce at least 3 hierarchy studies that explore different content orders and emphasis strategies?</div></div>
+    <div class="score-wrap">
+      <label class="threshold-check" data-gate="ideation-hierarchy"><input type="checkbox" onchange="toggleGate('ideation-hierarchy',this)"> min. 3 met</label>
+      <div class="quality-label">Quality Score</div>
+      <div class="score-buttons locked" data-id="ideation-hierarchy" data-section="ideation"></div>
+      <div class="gate-hint">quantity unlocks quality</div>
+    </div>
+  </div>
+  <div class="criterion">
+    <div><div class="criterion-label">Concept Range</div><div class="criterion-text">Did you explore a broad range of concepts (at least 12), spanning safe to risky directions?</div></div>
+    <div class="score-wrap">
+      <label class="threshold-check" data-gate="ideation-range"><input type="checkbox" onchange="toggleGate('ideation-range',this)"> min. 12 met</label>
+      <div class="quality-label">Quality Score</div>
+      <div class="score-buttons locked" data-id="ideation-range" data-section="ideation"></div>
+      <div class="gate-hint">quantity unlocks quality</div>
+    </div>
+  </div>
+  <div class="notes-row"><label>Notes</label><textarea placeholder="Observations or feedback on Ideation…"></textarea></div>
+</div>
+
+<!-- ITERATION — weight: 25 pts -->
+<div class="section">
+  <div class="section-header">
+    <div>
+      <div class="section-title">Iteration</div>
+      <div class="section-subtitle">Did the designer improve chosen directions through iterative changes to decide on and justify their proposed design?</div>
+    </div>
+    <div class="section-tally">
+      <span class="tally-pts" data-sec-pts="iteration">—</span>
+      <span class="tally-max">/ 25 pts</span>
+      <div><span class="tally-grade" data-sec-grade="iteration"></span></div>
+    </div>
+  </div>
+  <div class="criterion">
+    <div><div class="criterion-label">Exploration Set</div><div class="criterion-text">Did you generate at least 6 distinct directions across at least 3 exploratory variations, spanning safe to risky?</div></div>
+    <div class="score-wrap">
+      <label class="threshold-check" data-gate="iter-explore"><input type="checkbox" onchange="toggleGate('iter-explore',this)"> min. 6 met</label>
+      <div class="quality-label">Quality Score</div>
+      <div class="score-buttons locked" data-id="iter-explore" data-section="iteration"></div>
+      <div class="gate-hint">quantity unlocks quality</div>
+    </div>
+  </div>
+  <div class="criterion">
+    <div><div class="criterion-label">Refinement Set</div><div class="criterion-text">Did you refine 3 promising directions through focused variations, then select one direction to develop further?</div></div>
+    <div class="score-wrap">
+      <label class="threshold-check" data-gate="iter-refine"><input type="checkbox" onchange="toggleGate('iter-refine',this)"> min. 3 met</label>
+      <div class="quality-label">Quality Score</div>
+      <div class="score-buttons locked" data-id="iter-refine" data-section="iteration"></div>
+      <div class="gate-hint">quantity unlocks quality</div>
+    </div>
+  </div>
+  <div class="criterion">
+    <div><div class="criterion-label">Feedback Log</div><div class="criterion-text">Did you document feedback received and clearly note what you changed in response?</div></div>
+    <div class="score-wrap">
+      <div class="quality-label">Quality Score</div>
+      <div class="score-buttons" data-id="iter-feedback" data-section="iteration"></div>
+    </div>
+  </div>
+  <div class="notes-row"><label>Notes</label><textarea placeholder="Observations or feedback on Iteration…"></textarea></div>
+</div>
+
+<!-- TYPOGRAPHY — weight: 25 pts -->
+<div class="section">
+  <div class="section-header">
+    <div>
+      <div class="section-title">Typography</div>
+      <div class="section-subtitle">Does the designer demonstrate skills at the micro, meso, and macro levels?</div>
+    </div>
+    <div class="section-tally">
+      <span class="tally-pts" data-sec-pts="typography">—</span>
+      <span class="tally-max">/ 25 pts</span>
+      <div><span class="tally-grade" data-sec-grade="typography"></span></div>
+    </div>
+  </div>
+  <div class="subsection-label">Microtypography — Typeface, Size + Role, Style + Emphasis</div>
+  <div class="criterion">
+    <div><div class="criterion-label">Typeface Fit</div><div class="criterion-text">Do you use typefaces that are readable, match the message, and are appropriate for the format and context?</div></div>
+    <div class="score-wrap"><div class="quality-label">Quality Score</div><div class="score-buttons" data-id="micro-typeface" data-section="typography"></div></div>
+  </div>
+  <div class="criterion">
+    <div><div class="criterion-label">Size + Role</div><div class="criterion-text">Do your font sizes help readers instantly know what matters most—title, heading, body copy, or caption?</div></div>
+    <div class="score-wrap"><div class="quality-label">Quality Score</div><div class="score-buttons" data-id="micro-size" data-section="typography"></div></div>
+  </div>
+  <div class="criterion">
+    <div><div class="criterion-label">Style + Emphasis</div><div class="criterion-text">Do your font style choices guide the eye and emphasize key points?</div></div>
+    <div class="score-wrap"><div class="quality-label">Quality Score</div><div class="score-buttons" data-id="micro-style" data-section="typography"></div></div>
+  </div>
+  <div class="subsection-label">Mesotypography — Letter + Line Spacing, Paragraph Alignment + Form</div>
+  <div class="criterion">
+    <div><div class="criterion-label">Letter + Word Spacing</div><div class="criterion-text">Are letter and word spacing consistent and proportional, and intentionally varied when needed?</div></div>
+    <div class="score-wrap"><div class="quality-label">Quality Score</div><div class="score-buttons" data-id="meso-spacing" data-section="typography"></div></div>
+  </div>
+  <div class="criterion">
+    <div><div class="criterion-label">Width + Line Spacing</div><div class="criterion-text">Are blocks of text unified with consistent and proportional widths and line spacing, and varied when needed?</div></div>
+    <div class="score-wrap"><div class="quality-label">Quality Score</div><div class="score-buttons" data-id="meso-line" data-section="typography"></div></div>
+  </div>
+  <div class="criterion">
+    <div><div class="criterion-label">Paragraph Form</div><div class="criterion-text">Are paragraphs flowing clearly, with consistent alignment? Do they avoid misalignments, awkward gaps, and shapes?</div></div>
+    <div class="score-wrap"><div class="quality-label">Quality Score</div><div class="score-buttons" data-id="meso-para" data-section="typography"></div></div>
+  </div>
+  <div class="subsection-label">Macrotypography — Structure, Hierarchy + Affordances</div>
+  <div class="criterion">
+    <div><div class="criterion-label">Structure</div><div class="criterion-text">Does your design have a strong, unmistakable structure visible from a distance?</div></div>
+    <div class="score-wrap"><div class="quality-label">Quality Score</div><div class="score-buttons" data-id="macro-structure" data-section="typography"></div></div>
+  </div>
+  <div class="criterion">
+    <div><div class="criterion-label">Hierarchy</div><div class="criterion-text">Does your hierarchy instantly show readers where to start and guide them through the content?</div></div>
+    <div class="score-wrap"><div class="quality-label">Quality Score</div><div class="score-buttons" data-id="macro-hierarchy" data-section="typography"></div></div>
+  </div>
+  <div class="criterion">
+    <div><div class="criterion-label">Affordances</div><div class="criterion-text">Do your indents, accents, graphics, and ornaments intuitively guide the eye without needing extra explanation?</div></div>
+    <div class="score-wrap"><div class="quality-label">Quality Score</div><div class="score-buttons" data-id="macro-afford" data-section="typography"></div></div>
+  </div>
+  <div class="notes-row"><label>Notes</label><textarea placeholder="Observations or feedback on Typography…"></textarea></div>
+</div>
+
+<!-- COMMUNICATION — weight: 10 pts -->
+<div class="section">
+  <div class="section-header">
+    <div>
+      <div class="section-title">Communication</div>
+      <div class="section-subtitle">Did the designer clearly and appropriately communicate their intended concept to the audience and context?</div>
+    </div>
+    <div class="section-tally">
+      <span class="tally-pts" data-sec-pts="communication">—</span>
+      <span class="tally-max">/ 10 pts</span>
+      <div><span class="tally-grade" data-sec-grade="communication"></span></div>
+    </div>
+  </div>
+  <div class="criterion">
+    <div><div class="criterion-label">Concept Clarity</div><div class="criterion-text">Does the final design clearly communicate the concept and intent described in the design brief?</div></div>
+    <div class="score-wrap"><div class="quality-label">Quality Score</div><div class="score-buttons" data-id="comm-clarity" data-section="communication"></div></div>
+  </div>
+  <div class="criterion">
+    <div><div class="criterion-label">Context Testing</div><div class="criterion-text">Did you test the design in context—mock-in-environment, preference test, squint/grayscale test, contrast checks, and print proofs?</div></div>
+    <div class="score-wrap"><div class="quality-label">Quality Score</div><div class="score-buttons" data-id="comm-testing" data-section="communication"></div></div>
+  </div>
+  <div class="criterion">
+    <div><div class="criterion-label">Symbol Clarity</div><div class="criterion-text">Did you explicitly ask what elements (including colors) might be mistaken for, and adjust to avoid misreading?</div></div>
+    <div class="score-wrap"><div class="quality-label">Quality Score</div><div class="score-buttons" data-id="comm-symbol" data-section="communication"></div></div>
+  </div>
+  <div class="notes-row"><label>Notes</label><textarea placeholder="Observations or feedback on Communication…"></textarea></div>
+</div>
+
+<!-- CRAFT — weight: 20 pts -->
+<div class="section">
+  <div class="section-header">
+    <div>
+      <div class="section-title">Craft</div>
+      <div class="section-subtitle">Did you execute the work accurately and professionally, with documented checks for technical requirements?</div>
+    </div>
+    <div class="section-tally">
+      <span class="tally-pts" data-sec-pts="craft">—</span>
+      <span class="tally-max">/ 20 pts</span>
+      <div><span class="tally-grade" data-sec-grade="craft"></span></div>
+    </div>
+  </div>
+  <div class="criterion">
+    <div><div class="criterion-label">Self-Evaluation</div><div class="criterion-text">Did you include a brief self-assessed score with justification?</div></div>
+    <div class="score-wrap">
+      <label class="threshold-check" data-gate="craft-eval"><input type="checkbox" onchange="toggleGate('craft-eval',this)"> completed</label>
+      <div class="quality-label">Quality Score</div>
+      <div class="score-buttons locked" data-id="craft-eval" data-section="craft"></div>
+      <div class="gate-hint">completion unlocks quality</div>
+    </div>
+  </div>
+  <div class="criterion">
+    <div><div class="criterion-label">Technical Preflight</div><div class="criterion-text">Did you verify exports, bleeds/margins, image resolution, and file naming before submission?</div></div>
+    <div class="score-wrap">
+      <label class="threshold-check" data-gate="craft-preflight"><input type="checkbox" onchange="toggleGate('craft-preflight',this)"> completed</label>
+      <div class="quality-label">Quality Score</div>
+      <div class="score-buttons locked" data-id="craft-preflight" data-section="craft"></div>
+      <div class="gate-hint">completion unlocks quality</div>
+    </div>
+  </div>
+  <div class="criterion">
+    <div><div class="criterion-label">Detail Check</div><div class="criterion-text">Did you complete a final pass for spelling, alignment, and consistency?</div></div>
+    <div class="score-wrap">
+      <label class="threshold-check" data-gate="craft-detail"><input type="checkbox" onchange="toggleGate('craft-detail',this)"> completed</label>
+      <div class="quality-label">Quality Score</div>
+      <div class="score-buttons locked" data-id="craft-detail" data-section="craft"></div>
+      <div class="gate-hint">completion unlocks quality</div>
+    </div>
+  </div>
+  <div class="notes-row"><label>Notes</label><textarea placeholder="Observations or feedback on Craft…"></textarea></div>
+</div>
+
+</div>
+
+<div class="action-bar">
+  <div class="bar-left">
+    <span class="bar-pts" id="bar-pts">— / 100</span>
+    <span class="bar-pill" id="bar-pill">—</span>
+    <span class="bar-sub" id="bar-sub">not yet scored</span>
+  </div>
+  <div class="btn-group">
+    <button class="btn" onclick="clearAll()">Clear</button>
+    <button class="btn" onclick="window.print()">Save PDF</button>
+    <button class="btn primary" onclick="copyResults()">Copy Results</button>
+  </div>
+</div>
+
+<script>
+  // ── Weights: section → max pts out of 100 ──
+  // Raw scores (0–4 per criterion) are scaled into these weighted buckets.
+  const WEIGHTS = {
+    ideation:      { max: 20, criteria: 5  },
+    iteration:     { max: 25, criteria: 3  },
+    typography:    { max: 25, criteria: 9  },
+    communication: { max: 10, criteria: 3  },
+    craft:         { max: 20, criteria: 3  },
+  };
+  // Total possible raw pts per section = criteria × 4
+  // Scaled pts = (rawPts / rawMax) × weightedMax
+
+  const GRAND_MAX = 100;
+
+  const GATED = new Set([
+    'ideation-benchmarks','ideation-typeface','ideation-hierarchy',
+    'ideation-range','iter-explore','iter-refine',
+    'craft-eval','craft-preflight','craft-detail'
+  ]);
+
+  // Grade thresholds — based on scaled score out of 100
+  function gradeFromPct(pct) {
+    if (pct >= 100) return { label:'Exceeds',               pct:100, letter:'A', cls:'g4' };
+    if (pct >= 85)  return { label:'Meets',                 pct:85,  letter:'B', cls:'g3' };
+    if (pct >= 76)  return { label:'Needs Revision',        pct:76,  letter:'C', cls:'g2' };
+    if (pct >= 60)  return { label:'Insufficient Evidence', pct:60,  letter:'D', cls:'g1' };
+    return                 { label:'Not Submitted',         pct:0,   letter:'—', cls:'g0' };
+  }
+
+  const scores = {};
+
+  // ── Build 0–4 buttons ──
+  document.querySelectorAll('.score-buttons[data-id]').forEach(wrap => {
+    const id = wrap.dataset.id;
+    scores[id] = null;
+    for (let v = 0; v <= 4; v++) {
+      const btn = document.createElement('button');
+      btn.className = 'score-btn';
+      btn.textContent = v;
+      btn.dataset.val = v;
+      btn.onclick = () => {
+        scores[id] = v;
+        wrap.querySelectorAll('.score-btn').forEach(b => {
+          b.className = 'score-btn';
+          if (parseInt(b.dataset.val) === v) b.classList.add(`sel-${v}`);
+        });
+        updateTotals();
+      };
+      wrap.appendChild(btn);
+    }
+  });
+
+  // ── Threshold gate ──
+  function toggleGate(id, cb) {
+    const wrap = document.querySelector(`.score-buttons[data-id="${id}"]`);
+    const lbl  = document.querySelector(`.threshold-check[data-gate="${id}"]`);
+    if (cb.checked) {
+      wrap.classList.remove('locked');
+      lbl.classList.add('met');
+    } else {
+      wrap.classList.add('locked');
+      lbl.classList.remove('met');
+      scores[id] = null;
+      wrap.querySelectorAll('.score-btn').forEach(b => b.className = 'score-btn');
+      updateTotals();
+    }
+  }
+
+  // ── Update totals ──
+  function updateTotals() {
+    let grandScaled = 0;
+    let anyScoredGlobal = false;
+
+    for (const [section, { max, criteria }] of Object.entries(WEIGHTS)) {
+      const rawMax = criteria * 4;
+      let rawPts = 0;
+      let anyScored = false;
+
+      for (const [id, val] of Object.entries(scores)) {
+        const el = document.querySelector(`.score-buttons[data-id="${id}"]`);
+        if (el && el.dataset.section === section && val !== null) {
+          rawPts += val;
+          anyScored = true;
+        }
+      }
+
+      // Scale: raw pts / raw max × section weight
+      const scaledPts = anyScored ? (rawPts / rawMax) * max : 0;
+      const scaledRounded = Math.round(scaledPts * 10) / 10;
+
+      // Section display
+      const ptsEl = document.querySelector(`[data-sec-pts="${section}"]`);
+      const gradeEl = document.querySelector(`[data-sec-grade="${section}"]`);
+
+      if (ptsEl) ptsEl.textContent = anyScored ? scaledRounded.toFixed(1) : '—';
+
+      if (gradeEl) {
+        if (anyScored) {
+          const pct = (rawPts / rawMax) * 100;
+          const g = gradeFromPct(pct);
+          gradeEl.textContent = `${g.label} · ${g.letter}`;
+          gradeEl.className = `tally-grade ${g.cls}`;
+          anyScoredGlobal = true;
+          grandScaled += scaledPts;
+        } else {
+          gradeEl.textContent = '';
+          gradeEl.className = 'tally-grade';
+        }
+      }
+    }
+
+    // Overall
+    const grandPct = anyScoredGlobal ? (grandScaled / GRAND_MAX) * 100 : 0;
+    const overall = gradeFromPct(anyScoredGlobal ? grandPct : -1);
+    const grandRounded = Math.round(grandScaled * 10) / 10;
+
+    const pill = document.getElementById('grand-pill');
+    const pctEl = document.getElementById('grand-pct');
+    const barPts = document.getElementById('bar-pts');
+    const barPill = document.getElementById('bar-pill');
+    const barSub = document.getElementById('bar-sub');
+
+    if (anyScoredGlobal) {
+      pill.textContent = `${overall.label} · ${overall.letter}`;
+      pill.className = `grade-pill ${overall.cls}`;
+      pctEl.textContent = `${grandRounded} / 100 pts · ${Math.round(grandPct)}%`;
+      barPts.textContent = `${grandRounded} / 100`;
+      barPill.textContent = `${overall.label} · ${Math.round(grandPct)}% · ${overall.letter}`;
+      barPill.className = `bar-pill ${overall.cls}`;
+      barSub.textContent = `weighted score out of 100`;
+    } else {
+      pill.textContent = 'not yet scored';
+      pill.className = 'grade-pill';
+      pctEl.textContent = '';
+      barPts.textContent = '— / 100';
+      barPill.textContent = '—';
+      barPill.className = 'bar-pill';
+      barSub.textContent = 'not yet scored';
+    }
+  }
+
+  // ── Clear ──
+  function clearAll() {
+    if (!confirm('Clear all scores and notes?')) return;
+    for (const k of Object.keys(scores)) scores[k] = null;
+    document.querySelectorAll('.score-btn').forEach(b => b.className = 'score-btn');
+    document.querySelectorAll('textarea').forEach(t => t.value = '');
+    document.querySelectorAll('.threshold-check input[type=checkbox]').forEach(cb => {
+      cb.checked = false;
+      cb.closest('.threshold-check').classList.remove('met');
+    });
+    document.querySelectorAll('.score-buttons').forEach(w => {
+      if (GATED.has(w.dataset.id)) w.classList.add('locked');
+    });
+    document.querySelectorAll('[data-sec-pts]').forEach(el => el.textContent = '—');
+    document.querySelectorAll('[data-sec-grade]').forEach(el => { el.textContent = ''; el.className = 'tally-grade'; });
+    document.getElementById('grand-pill').textContent = 'not yet scored';
+    document.getElementById('grand-pill').className = 'grade-pill';
+    document.getElementById('grand-pct').textContent = '';
+    document.getElementById('bar-pts').textContent = '— / 100';
+    document.getElementById('bar-pill').textContent = '—';
+    document.getElementById('bar-pill').className = 'bar-pill';
+    document.getElementById('bar-sub').textContent = 'not yet scored';
+  }
+
+  // ── Copy ──
+  function copyResults() {
+    let grandScaled = 0, anyScoredGlobal = false;
+    let out = `TYPOGRAPHY CHECKPOINT — v1\n${'─'.repeat(56)}\n`;
+    out += `${'Section'.padEnd(16)} ${'Score'.padStart(8)}   Grade\n${'─'.repeat(56)}\n`;
+
+    for (const [section, { max, criteria }] of Object.entries(WEIGHTS)) {
+      const rawMax = criteria * 4;
+      let rawPts = 0, anyScored = false;
+      for (const [id, val] of Object.entries(scores)) {
+        const el = document.querySelector(`.score-buttons[data-id="${id}"]`);
+        if (el && el.dataset.section === section && val !== null) { rawPts += val; anyScored = true; }
+      }
+      const scaledPts = anyScored ? (rawPts / rawMax) * max : 0;
+      const pct = anyScored ? (rawPts / rawMax) * 100 : 0;
+      const g = anyScored ? gradeFromPct(pct) : { label: '—', letter: '—' };
+      const label = section.charAt(0).toUpperCase() + section.slice(1);
+      out += `${label.padEnd(16)} ${anyScored ? (Math.round(scaledPts*10)/10).toFixed(1).padStart(5) : '—'.padStart(5)} / ${String(max).padEnd(3)}  ${g.label} · ${g.letter}\n`;
+      if (anyScored) { grandScaled += scaledPts; anyScoredGlobal = true; }
+    }
+
+    out += `${'─'.repeat(56)}\n`;
+    if (anyScoredGlobal) {
+      const grandPct = (grandScaled / GRAND_MAX) * 100;
+      const overall = gradeFromPct(grandPct);
+      out += `${'Total'.padEnd(16)} ${(Math.round(grandScaled*10)/10).toFixed(1).padStart(5)} / 100  ${overall.label} · ${Math.round(grandPct)}% · ${overall.letter}\n`;
+    }
+    navigator.clipboard.writeText(out).then(() => alert('Results copied!'));
+  }
+
+  updateTotals();
+</script>
+</body>
+</html>

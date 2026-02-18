@@ -158,11 +158,11 @@
 </div>
 
 <div class="scale-bar">
-  <div class="scale-cell s4"><span class="sc-num">4</span><span class="sc-name">Exceeds</span><span class="sc-pct">100% · A range</span><div class="sc-desc">Work D.J. shows future students</div></div>
-  <div class="scale-cell s3"><span class="sc-num">3</span><span class="sc-name">Meets</span><span class="sc-pct">85% · B range</span><div class="sc-desc">Good, solid — some revision needed</div></div>
-  <div class="scale-cell s2"><span class="sc-num">2</span><span class="sc-name">Needs Revision</span><span class="sc-pct">76% · C range</span><div class="sc-desc">Significant gaps remain</div></div>
-  <div class="scale-cell s1"><span class="sc-num">1</span><span class="sc-name">Insufficient Evidence</span><span class="sc-pct">60% · D range</span><div class="sc-desc">Missing docs or components to evaluate</div></div>
-  <div class="scale-cell s0"><span class="sc-num">0</span><span class="sc-name">Not Submitted</span><span class="sc-pct">0% · —</span><div class="sc-desc">Missing artifact / academic integrity issue</div></div>
+  <div class="scale-cell s4"><span class="sc-num">4</span><span class="sc-name">Exceeds</span><span class="sc-pct">4.0 qpts · A</span><div class="sc-desc">Work of Excellent Quality</div></div>
+  <div class="scale-cell s3"><span class="sc-num">3</span><span class="sc-name">Meets</span><span class="sc-pct">3.0 qpts · B</span><div class="sc-desc">Work of Good Quality</div></div>
+  <div class="scale-cell s2"><span class="sc-num">2</span><span class="sc-name">Needs Revision</span><span class="sc-pct">2.0 qpts · C</span><div class="sc-desc">Work of Satisfactory Quality</div></div>
+  <div class="scale-cell s1"><span class="sc-num">1</span><span class="sc-name">Insufficient Evidence</span><span class="sc-pct">1.0 qpts · D</span><div class="sc-desc">Work of Poor Quality</div></div>
+  <div class="scale-cell s0"><span class="sc-num">0</span><span class="sc-name">Not Submitted</span><span class="sc-pct">0.0 qpts · F</span><div class="sc-desc">Failure to meet minimum standards</div></div>
 </div>
 
 <div class="content">
@@ -429,13 +429,25 @@
     'craft-eval','craft-preflight','craft-detail'
   ]);
 
-  // Grade thresholds — based on scaled score out of 100
+  // Grade thresholds — school quality point scale (0–4.0)
+  // The rubric's 0–4 scores ARE quality points, so the mapping is direct.
+  // pct passed in is (rawPts / rawMax) * 100, so avg = pct / 25 gives 0–4 quality pts.
+  // A=4.0, A-=3.6667, B+=3.3333, B=3.0, B-=2.6667, C+=2.3333, C=2.0,
+  // C-=1.6667, D+=1.3333, D=1.0, D-=0.6667, F=0
   function gradeFromPct(pct) {
-    if (pct >= 100) return { label:'Exceeds',               pct:100, letter:'A', cls:'g4' };
-    if (pct >= 85)  return { label:'Meets',                 pct:85,  letter:'B', cls:'g3' };
-    if (pct >= 76)  return { label:'Needs Revision',        pct:76,  letter:'C', cls:'g2' };
-    if (pct >= 60)  return { label:'Insufficient Evidence', pct:60,  letter:'D', cls:'g1' };
-    return                 { label:'Not Submitted',         pct:0,   letter:'—', cls:'g0' };
+    const avg = pct / 25;
+    if (avg >= 3.8334) return { label:'Exceeds',               letter:'A',  cls:'g4' };
+    if (avg >= 3.5001) return { label:'Exceeds',               letter:'A−', cls:'g4' };
+    if (avg >= 3.1667) return { label:'Meets',                 letter:'B+', cls:'g3' };
+    if (avg >= 2.8334) return { label:'Meets',                 letter:'B',  cls:'g3' };
+    if (avg >= 2.5001) return { label:'Meets',                 letter:'B−', cls:'g3' };
+    if (avg >= 2.1667) return { label:'Needs Revision',        letter:'C+', cls:'g2' };
+    if (avg >= 1.8334) return { label:'Needs Revision',        letter:'C',  cls:'g2' };
+    if (avg >= 1.5001) return { label:'Needs Revision',        letter:'C−', cls:'g2' };
+    if (avg >= 1.1667) return { label:'Insufficient Evidence', letter:'D+', cls:'g1' };
+    if (avg >= 0.8334) return { label:'Insufficient Evidence', letter:'D',  cls:'g1' };
+    if (avg >= 0.3334) return { label:'Insufficient Evidence', letter:'D−', cls:'g1' };
+    return                    { label:'Not Submitted',         letter:'F',  cls:'g0' };
   }
 
   const scores = {};
@@ -532,11 +544,13 @@
     const barSub = document.getElementById('bar-sub');
 
     if (anyScoredGlobal) {
+      // grandScaled is weighted pts out of 100; convert to quality point avg (0–4)
+      const qualityAvg = (grandScaled / GRAND_MAX) * 4;
       pill.textContent = `${overall.label} · ${overall.letter}`;
       pill.className = `grade-pill ${overall.cls}`;
-      pctEl.textContent = `${grandRounded} / 100 pts · ${Math.round(grandPct)}%`;
+      pctEl.textContent = `${grandRounded} / 100 pts · ${qualityAvg.toFixed(2)} quality pts`;
       barPts.textContent = `${grandRounded} / 100`;
-      barPill.textContent = `${overall.label} · ${Math.round(grandPct)}% · ${overall.letter}`;
+      barPill.textContent = `${overall.label} · ${qualityAvg.toFixed(2)} qpts · ${overall.letter}`;
       barPill.className = `bar-pill ${overall.cls}`;
       barSub.textContent = `weighted score out of 100`;
     } else {
